@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mini LMS - Courses</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .courses-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .courses-header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .course-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 5px solid #667eea;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            pointer-events: none;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-left-color: #764ba2;
+        }
+        
+        .course-card h3 {
+            color: #333;
+            margin: 0 0 12px 0;
+            font-size: 1.4em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .course-card p {
+            color: #666;
+            line-height: 1.6;
+            margin: 0 0 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .course-card .course-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .course-card .course-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .course-id {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #667eea;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-top: 12px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            float: right;
+            margin-bottom: 20px;
+        }
+        
+        .logout-btn:hover {
+            background: #c0392b;
+            transform: scale(1.02);
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+        
+        .nav-top {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .nav-top:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .nav-top.logout {
+            background: #e74c3c;
+        }
+        
+        .nav-top.logout:hover {
+            background: #c0392b;
+        }
+        
+        .welcome-msg {
+            color: #667eea;
+            font-weight: 600;
+            clear: both;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="display: flex; gap: 15px; justify-content: flex-end; margin-bottom: 20px;">
+            <button class="nav-btn nav-top" onclick="goToAssignments()">📋 Assignments</button>
+            <button class="nav-btn nav-top" onclick="goToStudentDetails()">👤 Student Details</button>
+            <button class="nav-btn nav-top logout" onclick="logout()">🚪 Logout</button>
+        </div>
+        
+        <div class="welcome-msg">Welcome to your courses!</div>
+        
+        <div class="courses-header">
+            <h1>📚 Available Courses</h1>
+            <p>Choose a course to get started learning</p>
+        </div>
+        
+        <div class="courses-grid" id="coursesList"></div>
+    </div>
+
+<script>
+async function loadCourses() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("Please login first");
+        window.location.href = "/";
+        return;
+    }
+    
+    try {
+        const response = await fetch("http://127.0.0.1:8000/api/courses/", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+        
+        if (!response.ok) throw new Error('Failed to load courses');
+        
+        const courses = await response.json();
+        const coursesList = document.getElementById("coursesList");
+        
+        if (courses.length === 0) {
+            coursesList.innerHTML = '<p>No courses available yet.</p>';
+            return;
+        }
+        
+        coursesList.innerHTML = courses.map((course, index) => `
+            <div class="course-card">
+                <h3>${course.title}</h3>
+                <p>${course.description}</p>
+                <span class="course-id">Course ID: ${course.id}</span>
+                <br><br>
+                <a href="/course-detail.html?id=${course.id}" class="course-link">View Course →</a>
+            </div>
+        `).join('');
+    } catch(err) {
+        console.error("Error loading courses:", err);
+        document.getElementById("coursesList").innerHTML = '<p style="color: red;">Error loading courses</p>';
+    }
+}
+
+function logout() {
+    localStorage.removeItem("token");
+    alert("Logged out successfully");
+    window.location.href = "/";
+}
+
+function goToAssignments() {
+    window.location.href = "/assignments/";
+}
+
+function goToStudentDetails() {
+    window.location.href = "/student-details.html";
+}
+
+loadCourses();
+</script>
+</body>
+</html>

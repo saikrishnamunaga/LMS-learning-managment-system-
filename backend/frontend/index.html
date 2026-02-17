@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>📚 Mini LMS - Student Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Login Page Specific Styles */
+        body.login-page {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f39c12 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            border-top: 6px solid #667eea;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            margin-bottom: 40px;
+        }
+
+        .login-header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0 0 10px 0;
+            font-weight: 800;
+        }
+
+        .login-header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            margin: 0;
+        }
+
+        .form-group {
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            text-align: left;
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #f7f9fc;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 5px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .login-form {
+            margin: 30px 0;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            margin-top: 15px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            font-weight: 600;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border-left: 5px solid #c0392b;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            border-left: 5px solid #27ae60;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .demo-credentials {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 0.95em;
+            border-left: 5px solid #e67e22;
+        }
+
+        .demo-credentials strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .demo-credentials code {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 0 4px;
+            font-family: monospace;
+        }
+
+        .signup-link {
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 0.95em;
+        }
+
+        .signup-link a {
+            color: #2ecc71;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .signup-link a:hover {
+            color: #27ae60;
+            text-decoration: underline;
+        }
+
+        .login-footer {
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-header">
+            <h1>📚 Mini LMS</h1>
+            <p>Student Learning Portal</p>
+        </div>
+
+        <div id="messageContainer"></div>
+
+        <form id="loginForm" class="login-form">
+            <div class="form-group">
+                <label for="username">👤 Username</label>
+                <input type="text" id="username" placeholder="Enter your username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">🔐 Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">Login to Dashboard</button>
+        </form>
+
+        <div class="signup-link">
+            Don't have an account? <a href="signup">✨ Create one here</a>
+        </div>
+
+        <div class="login-footer">
+            <p>🛡️ Secure Student Portal | © 2026 Mini LMS</p>
+        </div>
+    </div>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const loginBtn = document.getElementById("loginBtn");
+    const messageContainer = document.getElementById("messageContainer");
+    
+    console.log("Login attempt with username:", username);
+    
+    if(!username || !password) {
+        showMessage("Please enter both username and password", "error");
+        return;
+    }
+    
+    // Disable button and show loading state
+    loginBtn.disabled = true;
+    loginBtn.textContent = "⏳ Logging in...";
+    
+    try {
+        console.log("Sending request to /api/token/...");
+        const response = await fetch("http://127.0.0.1:8000/api/token/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        });
+        
+        console.log("Response status:", response.status);
+        const data = await response.json();
+        console.log("Response data:", data);
+        
+        if(!response.ok) {
+            throw new Error(data.detail || "Invalid credentials");
+        }
+        
+        if(data.access){
+            localStorage.setItem("token", data.access);
+            console.log("Token saved successfully");
+            showMessage("✅ Login Successful! Redirecting...", "success");
+            setTimeout(() => {
+                window.location.href = "courses/";
+            }, 1500);
+        } else {
+            throw new Error("No access token in response");
+        }
+    } catch(err){
+        console.error("Login error:", err);
+        showMessage("❌ " + (err.message || "Login failed. Please try again."), "error");
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Login to Dashboard";
+    }
+});
+
+function showMessage(message, type) {
+    const messageContainer = document.getElementById("messageContainer");
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `message ${type}-message`;
+    messageDiv.textContent = message;
+    messageContainer.innerHTML = "";
+    messageContainer.appendChild(messageDiv);
+    
+    if(type === "success") {
+        setTimeout(() => {
+            messageDiv.remove();
+        }, 3000);
+    }
+}
+</script>
+</body>
+</html>

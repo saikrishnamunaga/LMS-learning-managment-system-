@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>📚 Mini LMS - Create Account</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Signup Page Specific Styles */
+        body.signup-page {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f39c12 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .signup-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            border-top: 6px solid #2ecc71;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .signup-header {
+            margin-bottom: 30px;
+        }
+
+        .signup-header h1 {
+            font-size: 2.2em;
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0 0 10px 0;
+            font-weight: 800;
+        }
+
+        .signup-header p {
+            color: #7f8c8d;
+            font-size: 1em;
+            margin: 0;
+        }
+
+        .form-group {
+            margin: 16px 0;
+            position: relative;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #f7f9fc;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2ecc71;
+            background: white;
+            box-shadow: 0 0 0 5px rgba(46, 204, 113, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-group input::placeholder {
+            color: #a0a0a0;
+        }
+
+        .password-requirements {
+            background: #ecf0f1;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 0.85em;
+            color: #2d3748;
+            text-align: left;
+        }
+
+        .requirement {
+            padding: 4px 0;
+        }
+
+        .requirement.met {
+            color: #2ecc71;
+        }
+
+        .requirement.unmet {
+            color: #e74c3c;
+        }
+
+        .requirement::before {
+            content: "○ ";
+            font-weight: bold;
+            margin-right: 6px;
+        }
+
+        .requirement.met::before {
+            content: "✓ ";
+            color: #2ecc71;
+        }
+
+        .signup-form {
+            margin: 25px 0;
+        }
+
+        .signup-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3);
+            margin-top: 15px;
+        }
+
+        .signup-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(46, 204, 113, 0.5);
+        }
+
+        .signup-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .signup-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            font-weight: 600;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border-left: 5px solid #c0392b;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            border-left: 5px solid #27ae60;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .login-link {
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 0.95em;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .signup-footer {
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body class="signup-page">
+    <div class="signup-container">
+        <div class="signup-header">
+            <h1>✨ Create Account</h1>
+            <p>Join Mini LMS Learning Platform</p>
+        </div>
+
+        <div id="messageContainer"></div>
+
+        <form id="signupForm" class="signup-form">
+            <div class="form-group">
+                <label for="username">👤 Username</label>
+                <input type="text" id="username" placeholder="Choose a username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">📧 Email</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">🔐 Password</label>
+                <input type="password" id="password" placeholder="Create a strong password" required>
+            </div>
+
+            <div class="password-requirements">
+                <div class="requirement" id="req-length">At least 8 characters</div>
+                <div class="requirement" id="req-uppercase">One uppercase letter</div>
+                <div class="requirement" id="req-lowercase">One lowercase letter</div>
+                <div class="requirement" id="req-number">One number</div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">🔐 Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="role">🎓 Role</label>
+                <select id="role" required>
+                    <option value="">Select your role</option>
+                    <option value="student">Student</option>
+                    <option value="instructor">Instructor</option>
+                </select>
+            </div>
+
+            <button type="submit" class="signup-btn" id="signupBtn">Create Account</button>
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a href="/">🔐 Login here</a>
+        </div>
+
+        <div class="signup-footer">
+            <p>🛡️ Secure Registration | © 2026 Mini LMS</p>
+        </div>
+    </div>
+
+<script>
+// Password validation
+document.getElementById("password").addEventListener("input", function() {
+    const password = this.value;
+    
+    const lengthReq = document.getElementById("req-length");
+    const uppercaseReq = document.getElementById("req-uppercase");
+    const lowercaseReq = document.getElementById("req-lowercase");
+    const numberReq = document.getElementById("req-number");
+    
+    checkRequirement(lengthReq, password.length >= 8);
+    checkRequirement(uppercaseReq, /[A-Z]/.test(password));
+    checkRequirement(lowercaseReq, /[a-z]/.test(password));
+    checkRequirement(numberReq, /[0-9]/.test(password));
+});
+
+function checkRequirement(element, isMet) {
+    if(isMet) {
+        element.classList.add("met");
+        element.classList.remove("unmet");
+    } else {
+        element.classList.add("unmet");
+        element.classList.remove("met");
+    }
+}
+
+// Form submission
+document.getElementById("signupForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+    
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const role = document.getElementById("role").value;
+    const signupBtn = document.getElementById("signupBtn");
+    
+    // Validation
+    if(!username || !email || !password || !confirmPassword || !role) {
+        showMessage("❌ Please fill in all fields", "error");
+        return;
+    }
+    
+    if(password !== confirmPassword) {
+        showMessage("❌ Passwords do not match", "error");
+        return;
+    }
+    
+    if(password.length < 8) {
+        showMessage("❌ Password must be at least 8 characters long", "error");
+        return;
+    }
+    
+    if(!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
+        showMessage("❌ Password must contain uppercase, lowercase, and numbers", "error");
+        return;
+    }
+    
+    // Disable button and show loading state
+    signupBtn.disabled = true;
+    signupBtn.textContent = "⏳ Creating Account...";
+    
+    try {
+        console.log("Sending registration request...");
+        const response = await fetch("http://127.0.0.1:8000/api/register/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                username: username,
+                email: email,
+                password: password,
+                role: role
+            })
+        });
+        
+        const data = await response.json();
+        console.log("Response:", data);
+        
+        if(!response.ok) {
+            const errorMessage = data.username?.[0] || data.email?.[0] || data.detail || "Account creation failed";
+            throw new Error(errorMessage);
+        }
+        
+        showMessage("✅ Account created successfully! Redirecting to login...", "success");
+        setTimeout(() => {
+            window.location.href = "/";
+        }, 2000);
+    } catch(err){
+        console.error("Signup error:", err);
+        showMessage("❌ " + (err.message || "Registration failed. Please try again."), "error");
+        signupBtn.disabled = false;
+        signupBtn.textContent = "Create Account";
+    }
+});
+
+function showMessage(message, type) {
+    const messageContainer = document.getElementById("messageContainer");
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `message ${type}-message`;
+    messageDiv.textContent = message;
+    messageContainer.innerHTML = "";
+    messageContainer.appendChild(messageDiv);
+    
+    if(type === "success") {
+        setTimeout(() => {
+            messageDiv.remove();
+        }, 3000);
+    }
+}
+</script>
+</body>
+</html>

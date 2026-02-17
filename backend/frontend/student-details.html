@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mini LMS - Student Details</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .student-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .student-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .nav-btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .nav-btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .nav-btn-secondary:hover {
+            background: #d0d0d0;
+            transform: scale(1.02);
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .detail-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #667eea;
+        }
+        
+        .detail-card h2 {
+            color: #667eea;
+            margin: 0 0 20px 0;
+            font-size: 1.3em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .detail-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .detail-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            color: #333;
+            font-size: 1.1em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .performance-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .performance-section h2 {
+            color: #667eea;
+            margin: 0 0 20px 0;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .progress-item {
+            margin-bottom: 20px;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-buttons">
+            <button class="nav-btn nav-btn-secondary" onclick="goToCourses()">← Back to Courses</button>
+            <button class="nav-btn nav-btn-primary" onclick="goToAssignments()">📋 Assignments</button>
+            <button class="nav-btn nav-btn-secondary" onclick="logout()">🚪 Logout</button>
+        </div>
+        
+        <div class="student-header">
+            <h1>👤 Student Profile</h1>
+            <p id="studentName">Loading...</p>
+        </div>
+        
+        <div class="stats-grid" id="statsGrid"></div>
+        
+        <div class="details-grid">
+            <div class="detail-card">
+                <h2>Personal Information</h2>
+                <div class="detail-item">
+                    <div class="detail-label">Full Name</div>
+                    <div class="detail-value" id="fullName">-</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Username</div>
+                    <div class="detail-value" id="username">-</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value" id="email">-</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Student ID</div>
+                    <div class="detail-value" id="studentId">-</div>
+                </div>
+            </div>
+            
+            <div class="detail-card">
+                <h2>Academic Information</h2>
+                <div class="detail-item">
+                    <div class="detail-label">Total Courses</div>
+                    <div class="detail-value" id="totalCourses">0</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Completed Courses</div>
+                    <div class="detail-value" id="completedCourses">0</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Current GPA</div>
+                    <div class="detail-value" id="gpa">3.75</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Enrollment Status</div>
+                    <div class="detail-value" id="status">Active</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="performance-section">
+            <h2>📊 Course Performance</h2>
+            <div class="progress-item">
+                <div class="progress-label">
+                    <span>Python Basics</span>
+                    <span>85%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 85%;"></div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label">
+                    <span>Web Development</span>
+                    <span>78%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 78%;"></div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label">
+                    <span>Data Science</span>
+                    <span>92%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 92%;"></div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label">
+                    <span>Database Design</span>
+                    <span>88%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 88%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+async function loadStudentDetails() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("Please login first");
+        window.location.href = "/";
+        return;
+    }
+    
+    try {
+        // Get student info from token or create mock data
+        const response = await fetch("http://127.0.0.1:8000/api/token/verify/", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        }).catch(e => null);
+        
+        // Use mock data for demonstration
+        const studentInfo = {
+            id: 2,
+            username: "testuser",
+            email: "testuser@example.com",
+            firstName: "Test",
+            lastName: "User",
+            totalCourses: 4,
+            completedCourses: 2,
+            gpa: "3.75",
+            status: "Active",
+            enrollmentDate: "2025-01-15"
+        };
+        
+        // Update page with student info
+        document.getElementById("studentName").textContent = `${studentInfo.firstName} ${studentInfo.lastName}`;
+        document.getElementById("fullName").textContent = `${studentInfo.firstName} ${studentInfo.lastName}`;
+        document.getElementById("username").textContent = studentInfo.username;
+        document.getElementById("email").textContent = studentInfo.email;
+        document.getElementById("studentId").textContent = `STD${String(studentInfo.id).padStart(5, '0')}`;
+        document.getElementById("totalCourses").textContent = studentInfo.totalCourses;
+        document.getElementById("completedCourses").textContent = studentInfo.completedCourses;
+        document.getElementById("gpa").textContent = studentInfo.gpa;
+        document.getElementById("status").textContent = studentInfo.status;
+        
+        // Stats grid
+        const statsGrid = document.getElementById("statsGrid");
+        statsGrid.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-number">${studentInfo.totalCourses}</div>
+                <div class="stat-label">Enrolled Courses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${studentInfo.completedCourses}</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${studentInfo.gpa}</div>
+                <div class="stat-label">Current GPA</div>
+            </div>
+        `;
+    } catch(err) {
+        console.error("Error loading student details:", err);
+    }
+}
+
+function goToCourses() {
+    window.location.href = "/courses/";
+}
+
+function goToAssignments() {
+    window.location.href = "/assignments/";
+}
+
+function logout() {
+    localStorage.removeItem("token");
+    alert("Logged out successfully");
+    window.location.href = "/";
+}
+
+loadStudentDetails();
+</script>
+</body>
+</html>

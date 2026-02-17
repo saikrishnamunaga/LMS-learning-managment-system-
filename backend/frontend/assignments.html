@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mini LMS - Assignments</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .assignments-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .assignments-header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .nav-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .nav-btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .nav-btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .nav-btn-secondary:hover {
+            background: #d0d0d0;
+            transform: scale(1.02);
+        }
+        
+        .assignments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .assignment-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #f39c12;
+        }
+        
+        .assignment-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-left-color: #e67e22;
+        }
+        
+        .assignment-card h3 {
+            color: #333;
+            margin: 0 0 12px 0;
+            font-size: 1.4em;
+        }
+        
+        .assignment-card p {
+            color: #666;
+            line-height: 1.6;
+            margin: 0 0 15px 0;
+        }
+        
+        .assignment-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #999;
+            margin-bottom: 15px;
+        }
+        
+        .due-date {
+            background: #fff3cd;
+            padding: 8px 12px;
+            border-radius: 5px;
+            color: #856404;
+            font-weight: 600;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .status-pending {
+            background: #ffe5e5;
+            color: #c33;
+        }
+        
+        .status-submitted {
+            background: #e5f2e5;
+            color: #3c3;
+        }
+        
+        .status-graded {
+            background: #e5e5ff;
+            color: #33c;
+        }
+        
+        .assignment-link {
+            display: inline-block;
+            background: #f39c12;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .assignment-link:hover {
+            background: #e67e22;
+            transform: scale(1.05);
+        }
+        
+        .no-assignments {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-buttons">
+            <button class="nav-btn nav-btn-secondary" onclick="goBack()">← Back to Courses</button>
+            <button class="nav-btn nav-btn-primary" onclick="goToStudentDetails()">👤 Student Details</button>
+            <button class="nav-btn nav-btn-secondary" onclick="logout()">🚪 Logout</button>
+        </div>
+        
+        <div class="assignments-header">
+            <h1>📋 My Assignments</h1>
+            <p>Complete your assignments to improve your grades</p>
+        </div>
+        
+        <div class="assignments-grid" id="assignmentsList"></div>
+    </div>
+
+<script>
+async function loadAssignments() {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("Please login first");
+        window.location.href = "/";
+        return;
+    }
+    
+    try {
+        const response = await fetch("http://127.0.0.1:8000/api/courses/assignments/", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to load assignments');
+        }
+        
+        const assignments = await response.json();
+        const assignmentsList = document.getElementById("assignmentsList");
+        
+        if (assignments.length === 0) {
+            assignmentsList.innerHTML = '<div class="no-assignments">No assignments yet. Check back soon!</div>';
+            return;
+        }
+        
+        assignmentsList.innerHTML = assignments.map((assignment, index) => {
+            const dueDate = new Date(assignment.due_date);
+            const status = index % 3 === 0 ? 'pending' : (index % 3 === 1 ? 'submitted' : 'graded');
+            const statusText = status === 'pending' ? 'Pending' : (status === 'submitted' ? 'Submitted' : 'Graded');
+            
+            return `
+                <div class="assignment-card">
+                    <h3>📝 ${assignment.title}</h3>
+                    <p>${assignment.description}</p>
+                    <div class="assignment-meta">
+                        <span>Course ID: ${assignment.course}</span>
+                        <span class="due-date">Due: ${dueDate.toLocaleDateString()}</span>
+                    </div>
+                    <span class="status-badge status-${status}">${statusText}</span>
+                    <br>
+                    <a href="/assignment-detail.html?id=${assignment.id}" class="assignment-link">📖 View & Submit</a>
+                </div>
+            `;
+        }).join('');
+    } catch(err) {
+        console.error("Error loading assignments:", err);
+        document.getElementById("assignmentsList").innerHTML = 
+            '<div class="no-assignments">Error loading assignments. Please try again later.</div>';
+    }
+}
+
+function goBack() {
+    window.location.href = "/courses/";
+}
+
+function goToStudentDetails() {
+    window.location.href = "/student-details.html";
+}
+
+function logout() {
+    localStorage.removeItem("token");
+    alert("Logged out successfully");
+    window.location.href = "/";
+}
+
+loadAssignments();
+</script>
+</body>
+</html>
