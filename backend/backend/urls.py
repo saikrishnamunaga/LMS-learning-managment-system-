@@ -72,5 +72,8 @@ urlpatterns = [
     path('assignments/', serve_static_file, {'filename': 'assignments.html'}),
     path('assignment-detail.html', serve_static_file, {'filename': 'assignment-detail.html'}),
     path('student-details.html', serve_static_file, {'filename': 'student-details.html'}),
+    path('teacher-login.html', serve_static_file, {'filename': 'teacher-login.html'}),
+    path('teacher-dashboard.html', serve_static_file, {'filename': 'teacher-dashboard.html'}),
+
     path('style.css', serve_static_file, {'filename': 'style.css'}),
 ]

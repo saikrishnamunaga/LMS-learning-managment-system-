@@ -215,6 +215,27 @@ async function loadCourseDetail() {
             return;
         }
         
+        // Generate YouTube video section if youtube_link exists
+        let videoSection = '';
+        if (course.youtube_link) {
+            const videoId = extractYouTubeId(course.youtube_link);
+            if (videoId) {
+                videoSection = `
+                    <div class="video-section">
+                        <h2>Course Preview</h2>
+                        <div class="video-container">
+                            <iframe 
+                                src="https://www.youtube.com/embed/${videoId}" 
+                                title="YouTube video player" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
         // Render course detail
         const content = `
             <div class="course-detail-header">
@@ -237,6 +258,8 @@ async function loadCourseDetail() {
                 </div>
             </div>
             
+            ${videoSection}
+            
             <div class="course-content">
                 <h2>About this Course</h2>
                 <p>${course.description}</p>
@@ -244,7 +267,7 @@ async function loadCourseDetail() {
             </div>
             
             <div class="lessons-section">
-                <h2>📚 Course Content</h2>
+                <h2>Course Content</h2>
                 <div class="lesson-item">
                     <h3>Module 1: Fundamentals</h3>
                     <p>Introduction and core concepts</p>
@@ -279,6 +302,33 @@ function goBack() {
 function enrollCourse() {
     alert("Thank you! You have successfully enrolled in this course.");
     goBack();
+}
+
+// Extract YouTube video ID from various URL formats
+function extractYouTubeId(url) {
+    if (!url) return null;
+    
+    // Regular expression to match YouTube URL patterns
+    const patterns = [
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&\s]+)/,
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([^&\s]+)/,
+        /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([^&\s]+)/,
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/v\/([^&\s]+)/
+    ];
+    
+    for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match && match[1]) {
+            return match[1];
+        }
+    }
+    
+    // If the URL is already just an ID
+    if (url.length === 11 && /^[a-zA-Z0-9_-]+$/.test(url)) {
+        return url;
+    }
+    
+    return null;
 }
 
 loadCourseDetail();

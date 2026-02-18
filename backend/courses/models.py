@@ -5,6 +5,7 @@ class Course(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    youtube_link = models.URLField(max_length=500, blank=True, null=True, help_text="YouTube video URL for the course")
 
 class Lesson(models.Model):
     title = models.CharField(max_length=200)

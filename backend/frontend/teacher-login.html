@@ -2,12 +2,12 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Mini LMS - Student Portal</title>
+    <title>Mini LMS - Teacher Portal</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Login Page Specific Styles */
+        /* Teacher Login Page Specific Styles */
         body.login-page {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f39c12 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,7 +22,7 @@
             text-align: center;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
             border-radius: 20px;
-            border-top: 6px solid #667eea;
+            border-top: 6px solid #1e3c72;
             animation: slideUp 0.5s ease-out;
         }
 
@@ -43,7 +43,7 @@
 
         .login-header h1 {
             font-size: 2.5em;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -55,6 +55,17 @@
             color: #7f8c8d;
             font-size: 1.1em;
             margin: 0;
+        }
+
+        .teacher-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 10px;
         }
 
         .form-group {
@@ -83,9 +94,9 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #1e3c72;
             background: white;
-            box-shadow: 0 0 0 5px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 5px rgba(30, 60, 114, 0.1);
             transform: translateY(-2px);
         }
 
@@ -96,7 +107,7 @@
         .login-btn {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
             border: none;
             border-radius: 10px;
@@ -104,13 +115,13 @@
             font-size: 1.1em;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 20px rgba(30, 60, 114, 0.3);
             margin-top: 15px;
         }
 
         .login-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5);
+            box-shadow: 0 12px 30px rgba(30, 60, 114, 0.5);
         }
 
         .login-btn:active {
@@ -157,13 +168,13 @@
         }
 
         .demo-credentials {
-            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
             padding: 15px;
             border-radius: 10px;
             margin: 20px 0;
             font-size: 0.95em;
-            border-left: 5px solid #e67e22;
+            border-left: 5px solid #2a5298;
         }
 
         .demo-credentials strong {
@@ -198,6 +209,24 @@
             text-decoration: underline;
         }
 
+        .student-link {
+            margin-top: 15px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .student-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .student-link a:hover {
+            color: #2a5298;
+            text-decoration: underline;
+        }
+
         .login-footer {
             margin-top: 20px;
             color: #7f8c8d;
@@ -208,8 +237,9 @@
 <body class="login-page">
     <div class="login-container">
         <div class="login-header">
+            <div class="teacher-badge">INSTRUCTOR PORTAL</div>
             <h1>Mini LMS</h1>
-            <p>Student Learning Portal</p>
+            <p>Teacher Management Portal</p>
         </div>
 
         <div id="messageContainer"></div>
@@ -229,15 +259,15 @@
         </form>
 
         <div class="signup-link">
-            Don't have an account? <a href="signup">Create one here</a>
+            Need an account? <a href="signup">Register here</a>
         </div>
 
-        <div class="student-link" style="margin-top: 15px; color: #7f8c8d; font-size: 0.9em;">
-            Are you a teacher/instructor? <a href="teacher-login.html">Login as Teacher</a>
+        <div class="student-link">
+            Are you a student? <a href="/">Login as Student</a>
         </div>
 
         <div class="login-footer">
-            <p>Secure Student Portal | © 2026 Mini LMS</p>
+            <p>Secure Instructor Portal | © 2026 Mini LMS</p>
         </div>
     </div>
 
@@ -249,7 +279,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     const loginBtn = document.getElementById("loginBtn");
     const messageContainer = document.getElementById("messageContainer");
     
-    console.log("Login attempt with username:", username);
+    console.log("Teacher Login attempt with username:", username);
     
     if(!username || !password) {
         showMessage("Please enter both username and password", "error");
@@ -283,10 +313,11 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
         
         if(data.access){
             localStorage.setItem("token", data.access);
-            console.log("Token saved successfully");
-            showMessage("Login Successful! Redirecting...", "success");
+            localStorage.setItem("userRole", "instructor"); // Mark as teacher session
+            console.log("Teacher Token saved successfully");
+            showMessage("Login Successful! Redirecting to Teacher Dashboard...", "success");
             setTimeout(() => {
-                window.location.href = "courses/";
+                window.location.href = "teacher-dashboard.html";
             }, 1500);
         } else {
             throw new Error("No access token in response");

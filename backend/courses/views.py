@@ -18,10 +18,14 @@ class SubmissionCreateView(generics.CreateAPIView):
     serializer_class = SubmissionSerializer
     permission_classes = [IsAuthenticated]
 
-class AssignmentListCreateView(generics.ListCreateAPIView):
-    queryset = Assignment.objects.all()
-    serializer_class = AssignmentSerializer
-
-class SubmissionCreateView(generics.CreateAPIView):
+# New view to list submissions (for teachers to view student submissions)
+class SubmissionListView(generics.ListAPIView):
     queryset = Submission.objects.all()
     serializer_class = SubmissionSerializer
+    permission_classes = [IsAuthenticated]
+
+# View to retrieve, update, or delete a specific submission
+class SubmissionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Submission.objects.all()
+    serializer_class = SubmissionSerializer
+    permission_classes = [IsAuthenticated]

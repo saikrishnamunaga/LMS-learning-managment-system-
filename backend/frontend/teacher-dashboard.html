@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mini LMS - Teacher Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            min-height: 100vh;
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(30, 60, 114, 0.3);
+        }
+        
+        .dashboard-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.2em;
+        }
+        
+        .dashboard-header p {
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        .teacher-badge {
+            display: inline-block;
+            background: #f39c12;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .section-header h2 {
+            margin: 0;
+            color: #1e3c72;
+            font-size: 1.5em;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 60, 114, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .course-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #1e3c72;
+            transition: all 0.3s ease;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .course-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .course-card p {
+            color: #666;
+            margin: 0 0 15px 0;
+            font-size: 0.95em;
+        }
+        
+        .course-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .course-actions .btn {
+            padding: 8px 15px;
+            font-size: 0.85em;
+        }
+        
+        .assignments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .assignment-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #f39c12;
+            transition: all 0.3s ease;
+        }
+        
+        .assignment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .assignment-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .assignment-card p {
+            color: #666;
+            margin: 0 0 10px 0;
+            font-size: 0.95em;
+        }
+        
+        .due-date {
+            font-size: 0.85em;
+            color: #856404;
+            background: #fff3cd;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 4px rgba(30, 60, 114, 0.1);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            color: #1e3c72;
+        }
+        
+        .close-modal {
+            font-size: 28px;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            color: #e74c3c;
+        }
+        
+        .modal-footer {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .nav-btn-secondary:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn-logout {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .nav-btn-logout:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+        
+        .tab-btn:hover:not(.active) {
+            background: #d0d0d0;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+        }
+        
+        .stat-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 3em;
+            font-weight: 700;
+        }
+        
+        .stat-card p {
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        .message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-weight: 600;
+            animation: slideDown 0.3s ease;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-buttons">
+            <button class="nav-btn nav-btn-secondary" onclick="logout()">🚪 Logout</button>
+        </div>
+        
+        <div class="dashboard-header">
+            <div class="teacher-badge">INSTRUCTOR PORTAL</div>
+            <h1>👨‍🏫 Teacher Dashboard</h1>
+            <p>Manage your courses, assignments, and student submissions</p>
+        </div>
+        
+        <div id="messageContainer"></div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3 id="totalCourses">0</h3>
+                <p>📚 Total Courses</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalAssignments">0</h3>
+                <p>📝 Total Assignments</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalStudents">0</h3>
+                <p>👥 Enrolled Students</p>
+            </div>
+        </div>
+        
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="showTab('courses')">📚 Courses</button>
+            <button class="tab-btn" onclick="showTab('assignments')">📝 Assignments</button>
+            <button class="tab-btn" onclick="showTab('submissions')">📋 Student Submissions</button>
+        </div>
+        
+        <!-- Courses Tab -->
+        <div id="coursesTab" class="tab-content active">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>My Courses</h2>
+                    <button class="btn btn-primary" onclick="openCourseModal()">+ Create New Course</button>
+                </div>
+                <div class="courses-grid" id="coursesList">
+                    <p>Loading courses...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Assignments Tab -->
+        <div id="assignmentsTab" class="tab-content">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>Course Assignments</h2>
+                    <button class="btn btn-primary" onclick="openAssignmentModal()">+ Create New Assignment</button>
+                </div>
+                <div class="assignments-grid" id="assignmentsList">
+                    <p>Loading assignments...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Submissions Tab -->
+        <div id="submissionsTab" class="tab-content">
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2>Student Submissions</h2>
+                </div>
+                <div id="submissionsList">
+                    <p>Loading submissions...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Course Modal -->
+    <div id="courseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Course</h2>
+                <span class="close-modal" onclick="closeCourseModal()">&times;</span>
+            </div>
+            <form id="courseForm">
+                <div class="form-group">
+                    <label for="courseTitle">Course Title</label>
+                    <input type="text" id="courseTitle" placeholder="Enter course title" required>
+                </div>
+                <div class="form-group">
+                    <label for="courseDescription">Course Description</label>
+                    <textarea id="courseDescription" rows="4" placeholder="Enter course description" required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeCourseModal()">Cancel</button>
+                    <button type="submit" class="btn btn-success">Create Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Assignment Modal -->
+    <div id="assignmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Assignment</h2>
+                <span class="close-modal" onclick="closeAssignmentModal()">&times;</span>
+            </div>
+            <form id="assignmentForm">
+                <div class="form-group">
+                    <label for="assignmentCourse">Select Course</label>
+                    <select id="assignmentCourse" required>
+                        <option value="">Select a course</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="assignmentTitle">Assignment Title</label>
+                    <input type="text" id="assignmentTitle" placeholder="Enter assignment title" required>
+                </div>
+                <div class="form-group">
+                    <label for="assignmentDescription">Assignment Description</label>
+                    <textarea id="assignmentDescription" rows="4" placeholder="Enter assignment description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="assignmentDueDate">Due Date</label>
+                    <input type="date" id="assignmentDueDate" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeAssignmentModal()">Cancel</button>
+                    <button type="submit" class="btn btn-success">Create Assignment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
+let courses = [];
+let assignments = [];
+
+// Check authentication
+function checkAuth() {
+    const token = localStorage.getItem("token");
+    const userRole = localStorage.getItem("userRole");
+    
+    if (!token) {
+        alert("Please login first");
+        window.location.href = "teacher-login.html";
+        return false;
+    }
+    
+    if (userRole !== "instructor") {
+        // Check if it's a valid token by trying to use it
+        console.log("User role:", userRole);
+    }
+    
+    return true;
+}
+
+// Tab functionality
+function showTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Show selected tab
+    document.getElementById(tabName + 'Tab').classList.add('active');
+    
+    // Update button state
+    event.target.classList.add('active');
+}
+
+// Load courses
+async function loadCourses() {
+    const token = localStorage.getItem("token");
+    
+    try {
+        const response = await fetch("http://127.0.0.1:8000/api/courses/", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+        
+        if (!response.ok) throw new Error('Failed to load courses');
+        
+        courses = await response.json();
+        
+        document.getElementById("totalCourses").textContent = courses.length;
+        
+        const coursesList = document.getElementById("coursesList");
+        
+        if (courses.length === 0) {
+            coursesList.innerHTML = '<p>No courses available yet. Create your first course!</p>';
+            return;
+        }
+        
+        coursesList.innerHTML = courses.map(course => `
+            <div class="course-card">
+                <h3>${course.title}</h3>
+                <p>${course.description}</p>
+                <div class="course-actions">
+                    <button class="btn btn-primary" onclick="viewCourse(${course.id})">View Details</button>
+                </div>
+            </div>
+        `).join('');
+        
+        // Update course dropdown in assignment modal
+        updateCourseDropdown();
+        
+    } catch(err) {
+        console.error("Error loading courses:", err);
+        document.getElementById("coursesList").innerHTML = '<p style="color: red;">Error loading courses</p>';
+    }
+}
+
+// Load assignments
+async function loadAssignments() {
+    const token = localStorage.getItem("token");
+    
+    try {
+        const response = await fetch("http://127.0.0.1:8000/api/courses/assignments/", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+        
+        if (!response.ok) throw new Error('Failed to load assignments');
+        
+        assignments = await response.json();
+        
+        document.getElementById("totalAssignments").textContent = assignments.length;
+        
+        const assignmentsList = document.getElementById("assignmentsList");
+        
+        if (assignments.length === 0) {
+            assignmentsList.innerHTML = '<p>No assignments yet. Create your first assignment!</p>';
+            return;
+        }
+        
+        assignmentsList.innerHTML = assignments.map(assignment => {
+            const dueDate = new Date(assignment.due_date);
+            return `
+                <div class="assignment-card">
+                    <h3>${assignment.title}</h3>
+                    <p>${assignment.description}</p>
+                    <span class="due-date">Due: ${dueDate.toLocaleDateString()}</span>
+                    <br><br>
+                    <div class="course-actions">
+                        <button class="btn btn-primary" onclick="viewAssignment(${assignment.id})">View Details</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+    } catch(err) {
+        console.error("Error loading assignments:", err);
+        document.getElementById("assignmentsList").innerHTML = '<p style="color: red;">Error loading assignments</p>';
+    }
+}
+
+// Load submissions
+async function loadSubmissions() {
+    const token = localStorage.getItem("token");
+    
+    try {
+        // Try to load submissions - this might need a different endpoint
+        const response = await fetch("http://127.0.0.1:8000/api/courses/submissions/", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+        
+        const submissionsList = document.getElementById("submissionsList");
+        
+        if (!response.ok) {
+            submissionsList.innerHTML = '<p>No submissions yet or unable to load submissions.</p>';
+            return;
+        }
+        
+        const submissions = await response.json();
+        
+        document.getElementById("totalStudents").textContent = submissions.length || 0;
+        
+        if (submissions.length === 0) {
+            submissionsList.innerHTML = '<p>No submissions yet.</p>';
+            return;
+        }
+        
+        submissionsList.innerHTML = submissions.map(submission => `
+            <div class="assignment-card">
+                <h3>Submission #${submission.id}</h3>
+                <p>Assignment ID: ${submission.assignment}</p>
+                <p>Student ID: ${submission.student}</p>
+                <p>Submitted: ${new Date(submission.submitted_at).toLocaleString()}</p>
+            </div>
+        `).join('');
+        
+    } catch(err) {
+        console.error("Error loading submissions:", err);
+        document.getElementById("submissionsList").innerHTML = '<p>No submissions yet or unable to load submissions.</p>';
+    }
+}
+
+// Course modal functions
+function openCourseModal() {
+    document.getElementById("courseModal").style.display = "block";
+}
+
+function closeCourseModal() {
+    document.getElementById("courseModal").style.display = "none";
+    document.getElementById("courseForm").reset();
+}
+
+// Assignment modal functions
+function openAssignmentModal() {
+    updateCourseDropdown();
+    document.getElementById("assignmentModal").style.display = "block";
+}
+
+function closeAssignmentModal() {
+    document.getElementById("assignmentModal").style.display = "none";
+    document.getElementById("assignmentForm").reset();
+}
+
+// Update course dropdown
+function updateCourseDropdown() {
+    const select = document.getElementById("assignmentCourse");
+    select.innerHTML = '<option value="">Select a course</option>';
+    
+    courses.forEach(course => {
+        const option = document.createElement("option");
+        option.value = course.id;
+        option.textContent = course.title;
+        select.appendChild(option);
+    });
+}
+
+// Create course
+document.getElementById("courseForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    
+    const token = localStorage.getItem("token");
+    const title = document.getElementById("courseTitle").value;
+    const description = document.getElementById("courseDescription").value;
+    
+    try {
+        const response = await fetch("http://127.0.0.1:8000/api/courses/", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                title: title,
+                description: description
+            })
+        });
+        
+        if (!response.ok) throw new Error('Failed to create course');
+        
+        showMessage("Course created successfully!", "success");
+        closeCourseModal();
+        loadCourses();
+        
+    } catch(err) {
+        console.error("Error creating course:", err);
+        showMessage("Error creating course. Please try again.", "error");
+    }
+});
+
+// Create assignment
+document.getElementById("assignmentForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    
+    const token = localStorage.getItem("token");
+    const course = document.getElementById("assignmentCourse").value;
+    const title = document.getElementById("assignmentTitle").value;
+    const description = document.getElementById("assignmentDescription").value;
+    const due_date = document.getElementById("assignmentDueDate").value;
+    
+    try {
+        const response = await fetch("http://127.0.0.1:8000/api/courses/assignments/", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                course: parseInt(course),
+                title: title,
+                description: description,
+                due_date: due_date
+            })
+        });
+        
+        if (!response.ok) throw new Error('Failed to create assignment');
+        
+        showMessage("Assignment created successfully!", "success");
+        closeAssignmentModal();
+        loadAssignments();
+        
+    } catch(err) {
+        console.error("Error creating assignment:", err);
+        showMessage("Error creating assignment. Please try again.", "error");
+    }
+});
+
+// View course details
+function viewCourse(courseId) {
+    window.location.href = `course-detail.html?id=${courseId}`;
+}
+
+// View assignment details
+function viewAssignment(assignmentId) {
+    window.location.href = `assignment-detail.html?id=${assignmentId}`;
+}
+
+// Show message
+function showMessage(message, type) {
+    const container = document.getElementById("messageContainer");
+    const div = document.createElement("div");
+    div.className = `message ${type}-message`;
+    div.textContent = message;
+    container.innerHTML = "";
+    container.appendChild(div);
+    
+    setTimeout(() => {
+        div.remove();
+    }, 3000);
+}
+
+// Logout
+function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userRole");
+    alert("Logged out successfully");
+    window.location.href = "teacher-login.html";
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    if (event.target.classList.contains("modal")) {
+        event.target.style.display = "none";
+    }
+}
+
+// Initialize
+if (checkAuth()) {
+    loadCourses();
+    loadAssignments();
+    loadSubmissions();
+}
+</script>
+</body>
+</html>
